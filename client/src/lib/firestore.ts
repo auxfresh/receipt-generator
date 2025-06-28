@@ -53,6 +53,16 @@ export const getUserReceipts = async (userId: string): Promise<Receipt[]> => {
     console.log('Fetching receipts for user:', userId);
     console.log('Database URL:', import.meta.env.VITE_FIREBASE_DATABASE_URL);
     
+    // Check if user is authenticated
+    const { auth } = await import('./firebase');
+    const currentUser = auth.currentUser;
+    console.log('Current user:', currentUser?.uid);
+    console.log('User authenticated:', !!currentUser);
+    
+    if (!currentUser) {
+      throw new Error('User not authenticated');
+    }
+    
     const receiptsRef = ref(db, RECEIPTS_PATH);
     const userReceiptsQuery = query(receiptsRef, orderByChild('userId'), equalTo(userId));
     const snapshot = await get(userReceiptsQuery);
