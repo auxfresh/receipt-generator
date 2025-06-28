@@ -41,8 +41,8 @@ export const saveReceipt = async (
     updatedAt: serverTimestamp(),
   };
 
-  const receiptsRef = ref(db, RECEIPTS_PATH);
-  const newReceiptRef = push(receiptsRef);
+  const userReceiptsRef = ref(db, `users/${userId}/receipts`);
+  const newReceiptRef = push(userReceiptsRef);
   await set(newReceiptRef, receiptData);
   
   return newReceiptRef.key!;
@@ -63,8 +63,9 @@ export const getUserReceipts = async (userId: string): Promise<Receipt[]> => {
       throw new Error('User not authenticated');
     }
     
-    const receiptsRef = ref(db, RECEIPTS_PATH);
-    const userReceiptsQuery = query(receiptsRef, orderByChild('userId'), equalTo(userId));
+    // Alternative approach: query by user-specific path
+    const userReceiptsRef = ref(db, `users/${userId}/receipts`);
+    const userReceiptsQuery = query(userReceiptsRef, orderByKey());
     const snapshot = await get(userReceiptsQuery);
     
     console.log('Database snapshot exists:', snapshot.exists());
