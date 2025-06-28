@@ -1,4 +1,5 @@
 import { BankingReceiptData } from '@/types/receipt';
+import { formatCurrency } from '@/lib/currency';
 
 interface BankingReceiptPreviewProps {
   data: BankingReceiptData;
@@ -33,7 +34,7 @@ export function BankingReceiptPreview({ data, logoUrl }: BankingReceiptPreviewPr
           <div className="text-center">
             <p className="text-sm font-medium text-gray-600 mb-2">Transaction Amount</p>
             <p className="text-2xl font-bold text-gray-900">
-              ₦{data.transactionAmount ? data.transactionAmount.toLocaleString() : '0.00'}
+              {data.transactionAmount ? formatCurrency(data.transactionAmount, data.currency || 'NGN') : formatCurrency(0, data.currency || 'NGN')}
             </p>
           </div>
 
@@ -65,7 +66,7 @@ export function BankingReceiptPreview({ data, logoUrl }: BankingReceiptPreviewPr
           <div>
             <p className="text-sm text-gray-600 mb-2">Fees</p>
             <p className="text-gray-900">
-              ₦{data.fees ? data.fees.toLocaleString() : '0.00'}
+              {data.fees ? formatCurrency(data.fees, data.currency || 'NGN') : formatCurrency(0, data.currency || 'NGN')}
             </p>
           </div>
 

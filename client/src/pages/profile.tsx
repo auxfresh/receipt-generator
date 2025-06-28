@@ -208,25 +208,7 @@ export default function Profile() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Button variant="outline" className="w-full justify-start">
-                  <Mail className="mr-2 h-4 w-4" />
-                  Change Email
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <Shield className="mr-2 h-4 w-4" />
-                  Update Password
-                </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <User className="mr-2 h-4 w-4" />
-                  Privacy Settings
-                </Button>
-              </CardContent>
-            </Card>
+
           </div>
         </div>
       </div>

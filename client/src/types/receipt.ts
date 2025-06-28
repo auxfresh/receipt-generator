@@ -1,5 +1,6 @@
 export interface BankingReceiptData {
   companyName: string;
+  currency: string;
   transactionAmount: number;
   beneficiaryName: string;
   senderName: string;
@@ -18,6 +19,7 @@ export interface ShoppingItem {
 
 export interface ShoppingReceiptData {
   storeName: string;
+  currency: string;
   orderNumber: string;
   orderDate: string;
   items: ShoppingItem[];

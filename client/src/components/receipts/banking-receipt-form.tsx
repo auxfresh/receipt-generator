@@ -19,6 +19,7 @@ import { useLocation } from 'wouter';
 
 const bankingSchema = z.object({
   companyName: z.string().min(1, 'Company name is required'),
+  currency: z.string().min(1, 'Currency is required'),
   transactionAmount: z.number().min(0, 'Amount must be positive'),
   beneficiaryName: z.string().min(1, 'Beneficiary name is required'),
   senderName: z.string().min(1, 'Sender name is required'),
@@ -45,6 +46,7 @@ export function BankingReceiptForm({ onBack }: BankingReceiptFormProps) {
     resolver: zodResolver(bankingSchema),
     defaultValues: {
       companyName: '',
+      currency: 'NGN',
       transactionAmount: 0,
       beneficiaryName: '',
       senderName: '',
@@ -185,6 +187,37 @@ export function BankingReceiptForm({ onBack }: BankingReceiptFormProps) {
                         <FormControl>
                           <Input placeholder="Enter your company name" {...field} />
                         </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Currency */}
+                  <FormField
+                    control={form.control}
+                    name="currency"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Currency</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select currency" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="NGN">₦ Nigerian Naira (NGN)</SelectItem>
+                            <SelectItem value="USD">$ US Dollar (USD)</SelectItem>
+                            <SelectItem value="EUR">€ Euro (EUR)</SelectItem>
+                            <SelectItem value="GBP">£ British Pound (GBP)</SelectItem>
+                            <SelectItem value="JPY">¥ Japanese Yen (JPY)</SelectItem>
+                            <SelectItem value="CAD">$ Canadian Dollar (CAD)</SelectItem>
+                            <SelectItem value="AUD">$ Australian Dollar (AUD)</SelectItem>
+                            <SelectItem value="CHF">CHF Swiss Franc (CHF)</SelectItem>
+                            <SelectItem value="CNY">¥ Chinese Yuan (CNY)</SelectItem>
+                            <SelectItem value="INR">₹ Indian Rupee (INR)</SelectItem>
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}

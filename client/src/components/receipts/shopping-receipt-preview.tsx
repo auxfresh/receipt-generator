@@ -1,5 +1,6 @@
 import { ShoppingReceiptData } from '@/types/receipt';
 import { ShoppingCart } from 'lucide-react';
+import { formatCurrency } from '@/lib/currency';
 
 interface ShoppingReceiptPreviewProps {
   data: ShoppingReceiptData;
@@ -62,7 +63,7 @@ export function ShoppingReceiptPreview({ data, logoUrl }: ShoppingReceiptPreview
                   </div>
                   <div className="text-right">
                     <p className="text-gray-600">{item.quantity}</p>
-                    <p className="font-medium">₦{(item.price * item.quantity).toLocaleString()}</p>
+                    <p className="font-medium">{formatCurrency(item.price * item.quantity, data.currency || 'USD')}</p>
                   </div>
                 </div>
               ))
@@ -73,7 +74,7 @@ export function ShoppingReceiptPreview({ data, logoUrl }: ShoppingReceiptPreview
                 </div>
                 <div className="text-right">
                   <p className="text-gray-600">0</p>
-                  <p className="font-medium">₦0</p>
+                  <p className="font-medium">{formatCurrency(0, data.currency || 'USD')}</p>
                 </div>
               </div>
             )}
@@ -90,15 +91,15 @@ export function ShoppingReceiptPreview({ data, logoUrl }: ShoppingReceiptPreview
           <div className="space-y-2 mb-6">
             <div className="flex justify-between">
               <span className="text-gray-600">Subtotal</span>
-              <span className="font-medium">₦{subtotal.toLocaleString()}</span>
+              <span className="font-medium">{formatCurrency(subtotal, data.currency || 'USD')}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Shipping</span>
-              <span className="font-medium">₦{(data.shippingCost || 0).toLocaleString()}</span>
+              <span className="font-medium">{formatCurrency(data.shippingCost || 0, data.currency || 'USD')}</span>
             </div>
             <div className="flex justify-between text-lg font-bold">
               <span>Total</span>
-              <span>₦{total.toLocaleString()}</span>
+              <span>{formatCurrency(total, data.currency || 'USD')}</span>
             </div>
           </div>
 
