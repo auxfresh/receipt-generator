@@ -64,8 +64,8 @@ export const getUserReceipts = async (userId: string): Promise<Receipt[]> => {
       receipts.push({
         id: childSnapshot.key!,
         ...data,
-        createdAt: new Date(data.createdAt).toISOString(),
-        updatedAt: new Date(data.updatedAt).toISOString(),
+        createdAt: data.createdAt ? new Date(data.createdAt).toISOString() : new Date().toISOString(),
+        updatedAt: data.updatedAt ? new Date(data.updatedAt).toISOString() : new Date().toISOString(),
       });
     });
     
@@ -83,15 +83,21 @@ export const updateReceipt = async (
   logoFile?: File
 ): Promise<void> => {
   const receiptRef = ref(db, `${RECEIPTS_PATH}/${receiptId}`);
+  
+  // Get existing receipt data first
+  const snapshot = await get(receiptRef);
+  const existingData = snapshot.val();
+  
   const updateData: any = {
-    data,
+    ...existingData,
+    data: { ...existingData.data, ...data },
     updatedAt: serverTimestamp(),
   };
 
   if (logoFile) {
     const logoRef = storageRef(storage, `logos/${receiptId}/${Date.now()}_${logoFile.name}`);
-    const snapshot = await uploadBytes(logoRef, logoFile);
-    updateData.logoUrl = await getDownloadURL(snapshot.ref);
+    const uploadSnapshot = await uploadBytes(logoRef, logoFile);
+    updateData.logoUrl = await getDownloadURL(uploadSnapshot.ref);
   }
 
   await set(receiptRef, updateData);
