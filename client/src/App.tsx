@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/use-auth";
 import Login from "@/pages/login";
 import Dashboard from "@/pages/dashboard";
+import Profile from "@/pages/profile";
 import BankingReceipt from "@/pages/banking-receipt";
 import ShoppingReceipt from "@/pages/shopping-receipt";
 import NotFound from "@/pages/not-found";
@@ -16,6 +17,7 @@ function AuthenticatedRouter() {
     <Switch>
       <Route path="/" component={Dashboard} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/profile" component={Profile} />
       <Route path="/banking-receipt" component={BankingReceipt} />
       <Route path="/shopping-receipt" component={ShoppingReceipt} />
       <Route component={NotFound} />
