@@ -1,21 +1,20 @@
+
 import { 
-  collection, 
-  doc, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc, 
-  getDocs, 
+  ref, 
+  push, 
+  set, 
+  remove, 
+  get, 
   query, 
-  where, 
-  orderBy, 
-  Timestamp,
-  enableIndexedDbPersistence 
-} from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+  orderByChild, 
+  equalTo,
+  serverTimestamp 
+} from 'firebase/database';
+import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from './firebase';
 import { Receipt, BankingReceiptData, ShoppingReceiptData } from '@/types/receipt';
 
-const RECEIPTS_COLLECTION = 'receipts';
+const RECEIPTS_PATH = 'receipts';
 
 export const saveReceipt = async (
   userId: string,
@@ -27,7 +26,7 @@ export const saveReceipt = async (
   let logoUrl = '';
   
   if (logoFile) {
-    const logoRef = ref(storage, `logos/${userId}/${Date.now()}_${logoFile.name}`);
+    const logoRef = storageRef(storage, `logos/${userId}/${Date.now()}_${logoFile.name}`);
     const snapshot = await uploadBytes(logoRef, logoFile);
     logoUrl = await getDownloadURL(snapshot.ref);
   }
@@ -38,36 +37,43 @@ export const saveReceipt = async (
     title,
     data,
     logoUrl,
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
   };
 
-  const docRef = await addDoc(collection(db, RECEIPTS_COLLECTION), receiptData);
-  return docRef.id;
+  const receiptsRef = ref(db, RECEIPTS_PATH);
+  const newReceiptRef = push(receiptsRef);
+  await set(newReceiptRef, receiptData);
+  
+  return newReceiptRef.key!;
 };
 
 export const getUserReceipts = async (userId: string): Promise<Receipt[]> => {
   try {
-    const q = query(
-      collection(db, RECEIPTS_COLLECTION),
-      where('userId', '==', userId),
-      orderBy('createdAt', 'desc')
-    );
+    const receiptsRef = ref(db, RECEIPTS_PATH);
+    const userReceiptsQuery = query(receiptsRef, orderByChild('userId'), equalTo(userId));
+    const snapshot = await get(userReceiptsQuery);
     
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data().createdAt.toDate().toISOString(),
-      updatedAt: doc.data().updatedAt.toDate().toISOString(),
-    })) as Receipt[];
-  } catch (error: any) {
-    if (error.code === 'failed-precondition') {
-      // Index not ready, return empty array for now
-      console.warn('Firestore index not ready, returning empty results');
+    if (!snapshot.exists()) {
       return [];
     }
-    throw error;
+    
+    const receipts: Receipt[] = [];
+    snapshot.forEach((childSnapshot) => {
+      const data = childSnapshot.val();
+      receipts.push({
+        id: childSnapshot.key!,
+        ...data,
+        createdAt: new Date(data.createdAt).toISOString(),
+        updatedAt: new Date(data.updatedAt).toISOString(),
+      });
+    });
+    
+    // Sort by createdAt desc (newest first)
+    return receipts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  } catch (error: any) {
+    console.error('Error fetching receipts:', error);
+    return [];
   }
 };
 
@@ -76,22 +82,22 @@ export const updateReceipt = async (
   data: Partial<BankingReceiptData | ShoppingReceiptData>,
   logoFile?: File
 ): Promise<void> => {
-  const receiptRef = doc(db, RECEIPTS_COLLECTION, receiptId);
+  const receiptRef = ref(db, `${RECEIPTS_PATH}/${receiptId}`);
   const updateData: any = {
     data,
-    updatedAt: Timestamp.now(),
+    updatedAt: serverTimestamp(),
   };
 
   if (logoFile) {
-    const logoRef = ref(storage, `logos/${receiptId}/${Date.now()}_${logoFile.name}`);
+    const logoRef = storageRef(storage, `logos/${receiptId}/${Date.now()}_${logoFile.name}`);
     const snapshot = await uploadBytes(logoRef, logoFile);
     updateData.logoUrl = await getDownloadURL(snapshot.ref);
   }
 
-  await updateDoc(receiptRef, updateData);
+  await set(receiptRef, updateData);
 };
 
 export const deleteReceipt = async (receiptId: string): Promise<void> => {
-  const receiptRef = doc(db, RECEIPTS_COLLECTION, receiptId);
-  await deleteDoc(receiptRef);
+  const receiptRef = ref(db, `${RECEIPTS_PATH}/${receiptId}`);
+  await remove(receiptRef);
 };
