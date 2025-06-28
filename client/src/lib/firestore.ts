@@ -8,7 +8,8 @@ import {
   query, 
   where, 
   orderBy, 
-  Timestamp 
+  Timestamp,
+  enableIndexedDbPersistence 
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from './firebase';
@@ -46,19 +47,28 @@ export const saveReceipt = async (
 };
 
 export const getUserReceipts = async (userId: string): Promise<Receipt[]> => {
-  const q = query(
-    collection(db, RECEIPTS_COLLECTION),
-    where('userId', '==', userId),
-    orderBy('createdAt', 'desc')
-  );
-  
-  const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data(),
-    createdAt: doc.data().createdAt.toDate().toISOString(),
-    updatedAt: doc.data().updatedAt.toDate().toISOString(),
-  })) as Receipt[];
+  try {
+    const q = query(
+      collection(db, RECEIPTS_COLLECTION),
+      where('userId', '==', userId),
+      orderBy('createdAt', 'desc')
+    );
+    
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data().createdAt.toDate().toISOString(),
+      updatedAt: doc.data().updatedAt.toDate().toISOString(),
+    })) as Receipt[];
+  } catch (error: any) {
+    if (error.code === 'failed-precondition') {
+      // Index not ready, return empty array for now
+      console.warn('Firestore index not ready, returning empty results');
+      return [];
+    }
+    throw error;
+  }
 };
 
 export const updateReceipt = async (

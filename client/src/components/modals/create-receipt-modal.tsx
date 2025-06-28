@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { University, ShoppingCart } from 'lucide-react';
 import { useLocation } from 'wouter';
@@ -26,6 +26,9 @@ export function CreateReceiptModal({ open, onOpenChange }: CreateReceiptModalPro
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">Create New Receipt</DialogTitle>
+          <DialogDescription>
+            Choose the type of receipt you want to create
+          </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4">
