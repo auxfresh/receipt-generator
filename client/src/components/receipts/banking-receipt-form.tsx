@@ -18,6 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'wouter';
 
 const bankingSchema = z.object({
+  companyName: z.string().min(1, 'Company name is required'),
   transactionAmount: z.number().min(0, 'Amount must be positive'),
   beneficiaryName: z.string().min(1, 'Beneficiary name is required'),
   senderName: z.string().min(1, 'Sender name is required'),
@@ -43,6 +44,7 @@ export function BankingReceiptForm({ onBack }: BankingReceiptFormProps) {
   const form = useForm<BankingReceiptData>({
     resolver: zodResolver(bankingSchema),
     defaultValues: {
+      companyName: '',
       transactionAmount: 0,
       beneficiaryName: '',
       senderName: '',
@@ -172,6 +174,21 @@ export function BankingReceiptForm({ onBack }: BankingReceiptFormProps) {
                       </label>
                     </div>
                   </div>
+
+                  {/* Company Name */}
+                  <FormField
+                    control={form.control}
+                    name="companyName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Company Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter your company name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
                   {/* Transaction Amount */}
                   <FormField

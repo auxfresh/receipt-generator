@@ -1,4 +1,5 @@
 export interface BankingReceiptData {
+  companyName: string;
   transactionAmount: number;
   beneficiaryName: string;
   senderName: string;

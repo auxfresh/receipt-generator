@@ -15,10 +15,14 @@ export function BankingReceiptPreview({ data, logoUrl }: BankingReceiptPreviewPr
             <img src={logoUrl} alt="Logo" className="w-12 h-12 rounded-lg object-cover" />
           ) : (
             <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">K</span>
+              <span className="text-white font-bold text-lg">
+                {data.companyName ? data.companyName.charAt(0).toUpperCase() : 'C'}
+              </span>
             </div>
           )}
-          <span className="ml-3 text-xl font-bold text-purple-600">kuda.</span>
+          <span className="ml-3 text-xl font-bold text-purple-600">
+            {data.companyName || 'Your Company'}
+          </span>
         </div>
         
         <div className="text-right mb-8">
@@ -84,12 +88,6 @@ export function BankingReceiptPreview({ data, logoUrl }: BankingReceiptPreviewPr
           <div>
             <p className="text-sm text-gray-600 mb-2">Payment Type</p>
             <p className="text-gray-900">{data.paymentType || '-'}</p>
-          </div>
-
-          <div className="bg-gray-100 rounded-lg p-4 text-center mt-8">
-            <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mx-auto">
-              <span className="text-white font-bold text-lg">K</span>
-            </div>
           </div>
         </div>
       </div>
