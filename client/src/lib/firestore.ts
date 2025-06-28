@@ -50,17 +50,24 @@ export const saveReceipt = async (
 
 export const getUserReceipts = async (userId: string): Promise<Receipt[]> => {
   try {
+    console.log('Fetching receipts for user:', userId);
+    console.log('Database URL:', import.meta.env.VITE_FIREBASE_DATABASE_URL);
+    
     const receiptsRef = ref(db, RECEIPTS_PATH);
     const userReceiptsQuery = query(receiptsRef, orderByChild('userId'), equalTo(userId));
     const snapshot = await get(userReceiptsQuery);
     
+    console.log('Database snapshot exists:', snapshot.exists());
+    
     if (!snapshot.exists()) {
+      console.log('No receipts found for user');
       return [];
     }
     
     const receipts: Receipt[] = [];
     snapshot.forEach((childSnapshot) => {
       const data = childSnapshot.val();
+      console.log('Receipt data:', data);
       receipts.push({
         id: childSnapshot.key!,
         ...data,
@@ -69,11 +76,15 @@ export const getUserReceipts = async (userId: string): Promise<Receipt[]> => {
       });
     });
     
+    console.log('Total receipts found:', receipts.length);
     // Sort by createdAt desc (newest first)
     return receipts.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   } catch (error: any) {
-    console.error('Error fetching receipts:', error);
-    return [];
+    console.error('Error fetching receipts - Full error object:', error);
+    console.error('Error message:', error.message);
+    console.error('Error code:', error.code);
+    console.error('Error stack:', error.stack);
+    throw error; // Re-throw to see the actual error in the UI
   }
 };
 
