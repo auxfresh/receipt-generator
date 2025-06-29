@@ -1,6 +1,6 @@
 [build]
-  publish = "dist"
   command = "npx vite build"
+  publish = "dist/public"   # ✅ match the Vite build output
 
 [build.environment]
   NODE_VERSION = "20"
