@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Eye, Save, Upload, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, Download, Save, Upload, Plus, Trash2 } from 'lucide-react';
 import { ShoppingReceiptPreview } from './shopping-receipt-preview';
 import { ShoppingReceiptData } from '@/types/receipt';
 import { saveReceipt } from '@/lib/firestore';
@@ -105,12 +105,12 @@ export function ShoppingReceiptForm({ onBack }: ShoppingReceiptFormProps) {
     try {
       const title = `${data.storeName} Order`;
       await saveReceipt(user.uid, 'shopping', title, data, logoFile || undefined);
-      
+
       toast({
         title: 'Success',
         description: 'Shopping receipt saved successfully!',
       });
-      
+
       setLocation('/dashboard');
     } catch (error) {
       console.error('Save failed:', error);
@@ -269,7 +269,7 @@ export function ShoppingReceiptForm({ onBack }: ShoppingReceiptFormProps) {
                         Add Item
                       </Button>
                     </div>
-                    
+
                     <div className="space-y-4">
                       {fields.map((field, index) => (
                         <Card key={field.id} className="p-4">
@@ -428,7 +428,7 @@ export function ShoppingReceiptForm({ onBack }: ShoppingReceiptFormProps) {
                   />
                 </form>
               </Form>
-              
+
               {/* Download Button */}
               <div className="mt-6 pt-6 border-t">
                 <Button 
@@ -436,7 +436,7 @@ export function ShoppingReceiptForm({ onBack }: ShoppingReceiptFormProps) {
                   onClick={handlePreview}
                   className="w-full"
                 >
-                  <Eye className="mr-2 h-4 w-4" />
+                  <Download className="mr-2 h-4 w-4" />
                   Download Preview
                 </Button>
               </div>
