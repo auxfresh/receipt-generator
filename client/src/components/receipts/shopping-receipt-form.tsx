@@ -379,7 +379,7 @@ export function ShoppingReceiptForm({ onBack }: ShoppingReceiptFormProps) {
                       <FormItem>
                         <FormLabel>Payment Method</FormLabel>
                         <FormControl>
-                          <Input placeholder="Mastercard (**** 142) 1423" {...field} />
+                          <Input placeholder="Credit or Debit Card" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -434,7 +434,7 @@ export function ShoppingReceiptForm({ onBack }: ShoppingReceiptFormProps) {
                 <Button 
                   variant="outline" 
                   onClick={handlePreview}
-                  className="w-full"
+                  className="bg-purple-600 hover:bg-purple-700 text-white"
                 >
                   <Download className="mr-2 h-4 w-4" />
                   Download Preview

@@ -373,7 +373,7 @@ export function BankingReceiptForm({ onBack }: BankingReceiptFormProps) {
                 <Button 
                   variant="outline" 
                   onClick={handlePreview}
-                  className="w-full"
+                  className="bg-purple-600 hover:bg-purple-700 text-white"
                 >
                   <Download className="mr-2 h-4 w-4" />
                   Download Preview
