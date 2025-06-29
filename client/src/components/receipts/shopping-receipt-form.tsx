@@ -136,17 +136,13 @@ export function ShoppingReceiptForm({ onBack }: ShoppingReceiptFormProps) {
               <h1 className="text-xl font-bold text-gray-900">Shopping Receipt</h1>
             </div>
             <div className="flex items-center space-x-4">
-              <Button variant="outline" onClick={handlePreview}>
-                <Eye className="mr-2 h-4 w-4" />
-                Preview
-              </Button>
               <Button 
                 onClick={form.handleSubmit(onSubmit)}
                 disabled={loading}
                 className="bg-purple-600 hover:bg-purple-700"
               >
                 <Save className="mr-2 h-4 w-4" />
-                {loading ? 'Saving...' : 'Save Receipt'}
+                {loading ? 'Saving...' : 'Save'}
               </Button>
             </div>
           </div>
@@ -432,6 +428,18 @@ export function ShoppingReceiptForm({ onBack }: ShoppingReceiptFormProps) {
                   />
                 </form>
               </Form>
+              
+              {/* Download Button */}
+              <div className="mt-6 pt-6 border-t">
+                <Button 
+                  variant="outline" 
+                  onClick={handlePreview}
+                  className="w-full"
+                >
+                  <Eye className="mr-2 h-4 w-4" />
+                  Download Preview
+                </Button>
+              </div>
             </CardContent>
           </Card>
 
