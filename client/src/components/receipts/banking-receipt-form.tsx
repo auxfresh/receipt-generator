@@ -127,7 +127,7 @@ export function BankingReceiptForm({ onBack }: BankingReceiptFormProps) {
               <Button variant="ghost" onClick={onBack} className="mr-4">
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <h1 className="text-xl font-bold text-gray-900">Banking Transaction Receipt</h1>
+              <h1 className="text-xl font-bold text-gray-900">Banking Receipt</h1>
             </div>
             <div className="flex items-center space-x-4">
               <Button variant="outline" onClick={handlePreview}>
